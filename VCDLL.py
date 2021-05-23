@@ -353,7 +353,7 @@ class VidepCapture():
         
     def select_laser(self, d_id, l_id):
         if DEBUG:
-            print("VidepCapture::select_laser(%d, %d, %d)" % (d_id, l_id))
+            print("VidepCapture::select_laser(%d, %d)" % (d_id, l_id))
         #
         return self.set_current_laser_number(d_id, l_id)
 
