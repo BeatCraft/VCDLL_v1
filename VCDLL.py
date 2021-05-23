@@ -16,9 +16,9 @@ from operator import itemgetter
 #
 DEBUG = 0
 #
-NUM_DEVICE = 8
-NUM_SENSOR = 4
-NUM_LD = 4
+NUM_DEVICE = 1
+NUM_SENSOR = 8
+NUM_LD = 3
 #
 # device : CX3 based USB Capture device
 #           (dev file index, dev_object ptr, sn_gen, sn_module, sn_position)
