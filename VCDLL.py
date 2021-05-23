@@ -88,7 +88,7 @@ class VidepCapture():
         self._vcdll.Dev_StillTrigger.argtypes = [ctypes.c_void_p,]
         # void* Dev_GetStillBuffer(DevObject* self, int milsec);
         self._vcdll.Dev_GetStillBuffer.restype = ctypes.c_void_p
-        self._vcdll.Dev_StillTrigger.argtypes = [ctypes.c_void_p, ctypes.c_int,]
+        self._vcdll.Dev_GetStillBuffer.argtypes = [ctypes.c_void_p, ctypes.c_int,]
         # bool Dev_GetExposureRange(DevObject* self, long* min, long* max, long* step, long* def);
         # bool Dev_GetExposure(DevObject* self, long* exposure);
         # bool Dev_SetExposure(DevObject* self, long exposure);
