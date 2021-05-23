@@ -448,11 +448,13 @@ def main():
     vc = VidepCapture()
     # objects for all connected decives are allocated.
     vc.initialize()
-    print vc.get_device_sn(0)
+    #print vc.get_device_sn(0)
     #print vc.set_device_sn(0, "20000000")
-    print vc.get_device_sn(0)
+    #print vc.get_device_sn(0)
 
     return 0
+    
+    
     # laser setting
     vc.set_laser_setting(d_id , l_id , current, duration)
     l_id = 1
