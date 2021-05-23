@@ -81,7 +81,7 @@ class VidepCapture():
         self._vcdll.Dev_Stop.argtypes = [ctypes.c_void_p,]
         # void* Dev_GetBuffer(DevObject* self, int milsec);
         self._vcdll.Dev_GetBuffer.restype = ctypes.c_void_p
-        self._vcdll.Dev_Stop.argtypes = [ctypes.c_void_p, ctypes.c_int,]
+        self._vcdll.Dev_GetBuffer.argtypes = [ctypes.c_void_p, ctypes.c_int,]
         #void* Dev_GetBufferRaw8(DevObject* self, int milsec);
         #bool Dev_StillTrigger(DevObject* self);
         self._vcdll.Dev_StillTrigger.restype = ctypes.c_bool
