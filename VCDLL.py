@@ -497,73 +497,14 @@ def main():
     #vc.select_laser(d_id, 0)
     vc.trigger(d_id, s_id)
     buf = vc.get_buffer(d_id, s_id)
+    print("kkk")
+    print(buf)
     #
     #
     #
     time.sleep(1)
     vc.stop_device(0)
     vc.terminate()
-    return 0
-    
-    
-    # laser setting
-    vc.set_laser_setting(d_id , l_id , current, duration)
-    l_id = 1
-    vc.set_laser_setting(d_id , l_id , current, duration)
-    l_id = 2
-    vc.set_laser_setting(d_id , l_id , current, duration)
-    l_id = 3
-    vc.set_laser_setting(d_id , l_id , 0, 0)
-    l_id = 0
-    vc.select_laser(d_id, l_id)
-    #
-    vc.start_device(d_id)
-    #
-    s_id = 0
-    vc.select_sensor(d_id , s_id)
-    vc.set_exposure(d_id, exposure)
-    vc.set_gain(d_id, gain)
-    #
-    vc.select_laser(d_id, 0)
-    vc.trigger(d_id, s_id) # capture images with different LDs sequencialy.
-    vc.get_buffer(d_id, s_id, buf0)
-
-    vc.select_laser(d_id, 1)
-    vc.trigger(d_id, s_id) # capture images with different LDs sequencialy.
-    vc.get_buffer(d_id, s_id, buf0)
-
-    vc.select_laser(d_id, 2)
-    vc.trigger(d_id, s_id) # capture images with different LDs sequencialy.
-    vc.get_buffer(d_id, s_id, buf0)
-    #
-    #
-    #
-    vc.select_laser(d_id, 0)
-    #
-    s_id = 1
-    vc.select_sensor(d_id , s_id)
-    vc.set_exposure(d_id, exposure)
-    vc.set_gain(d_id, gain)
-    vc.trigger(d_id, s_id)
-    vc.get_buffer(d_id, s_id, buf1)
-    #
-    s_id = 2
-    vc.select_sensor(d_id , s_id)
-    vc.set_exposure(d_id, exposure)
-    vc.set_gain(d_id, gain)
-    vc.trigger(d_id, s_id)
-    vc.get_buffer(d_id, s_id, buf2)
-    #
-    s_id = 3
-    vc.select_sensor(d_id , s_id)
-    vc.set_exposure(d_id, exposure)
-    vc.set_gain(d_id, gain)
-    vc.trigger(d_id, s_id)
-    vc.get_buffer(d_id, s_id, buf3)
-    #
-    vc.stop_device(d_id)
-    vc.terminate()
-    #
     return 0
 #
 #
