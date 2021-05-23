@@ -499,7 +499,7 @@ def main():
     vc.set_laser_setting(d_id , l_id , current, duration)
     vc.set_exposure(d_id, exposure)
     vc.set_gain(d_id, gain)
-    vc.select_laser(d_id, l_id)
+    #vc.select_laser(d_id, l_id)
     vc.trigger(d_id, s_id)
     buf = vc.get_buffer(d_id, s_id)
     print("kkk")
