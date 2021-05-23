@@ -53,50 +53,84 @@ class VidepCapture():
             self._vcdll = None
             return None
         #
-        #
-        #
-        self._vcdll.Dev_NewObject.restype = ctypes.c_long
+        # void Dev_Initialize(void);
+        # void Dev_Terminate(void);
+        #long Dev_EnumDevice(void);
         self._vcdll.Dev_EnumDevice.restype = ctypes.c_long
-        self._vcdll.Dev_GetDeviceNameByIndex.restype = ctypes.c_bool
-        self._vcdll.Dev_FormatCount.restype = ctypes.c_long
-        self._vcdll.Dev_GetFormatbyIndex.restype = ctypes.c_bool
+        # bool Dev_GetDeviceNameByIndex(int index, SensorDeviceName* name);
+        # DevObject* Dev_NewObject(int index);
+        self._vcdll.Dev_NewObject.restype = ctypes.c_void_p
+        self._vcdll.Dev_NewObject.argtypes = [ctypes.c_int,]
+        # void Dev_Dealloc(DevObject* self);
+        # long Dev_FormatCount(DevObject* self);
+        # Dev_GetFormatbyIndex(DevObject* self, int index, CapFormat* info);
+        # bool Dev_SetFormatIndex(DevObject* self, int index);
         self._vcdll.Dev_SetFormatIndex.restype = ctypes.c_bool
+        self._vcdll.Dev_SetFormatIndex.argtypes = [ctypes.c_void_p, ctypes.c_int,]
+        # bool Dev_GetCurrentFormatIndex(DevObject* self, int* index);
         self._vcdll.Dev_GetCurrentFormatIndex.restype = ctypes.c_bool
-        self._vcdll.Dev_IsSupportStillCapture.restype = ctypes.c_bool
-        self._vcdll.Dev_StillFormatCount.restype = ctypes.c_long
-        self._vcdll.Dev_GetStillFormatbyIndex.restype = ctypes.c_bool
-        self._vcdll.Dev_SetStillFormatIndex.restype = ctypes.c_bool
+        self._vcdll.Dev_GetCurrentFormatIndex.argtypes = [ctypes.c_void_p, ctypes.c_void_p,]
+        # bool Dev_IsSupportStillCapture(DevObject* self);
+        # long Dev_StillFormatCount(DevObject* self);
+        # bool Dev_GetStillFormatbyIndex(DevObject* self, int index, CapFormat* info);
+        # bool Dev_Start(DevObject* self);
         self._vcdll.Dev_Start.restype = ctypes.c_bool
+        self._vcdll.Dev_Start.argtypes = [ctypes.c_void_p,]
+        # bool Dev_Stop(DevObject* self);
         self._vcdll.Dev_Stop.restype = ctypes.c_bool
-        self._vcdll.Dev_GetExposureRange.restype = ctypes.c_bool
-        self._vcdll.Dev_GetExposure.restype = ctypes.c_bool
-        self._vcdll.Dev_SetExposure.restype = ctypes.c_bool
-        self._vcdll.Dev_GetGainRange.restype = ctypes.c_bool
-        self._vcdll.Dev_GetGain.restype = ctypes.c_bool
-        self._vcdll.Dev_SetGain.restype = ctypes.c_bool
-        self._vcdll.Dev_GetCurrentLaserNumber.restype = ctypes.c_bool
-        self._vcdll.Dev_SetCurrentLaserNumber.restype = ctypes.c_bool
-        #self._vcdll.Dev_GetSensorPower.restype = ctypes.c_bool
-        #self._vcdll.Dev_SetSensorPower.restype = ctypes.c_bool
-        self._vcdll.Dev_GetSensorReadoutDelay.restype = ctypes.c_bool
-        self._vcdll.Dev_SetSensorReadoutDelay.restype = ctypes.c_bool
-        self._vcdll.Dev_GetSensorFlip.restype = ctypes.c_bool
-        self._vcdll.Dev_SetSensorFlip.restype = ctypes.c_bool
-        self._vcdll.Dev_GetCanStillCapture.restype = ctypes.c_bool
-        #self._vcdll.Dev_GetStillCaptureCount.restype = ctypes.c_bool
-        #self._vcdll.Dev_SetStillCaptureCount.restype = ctypes.c_bool
-        self._vcdll.Dev_GetSerialNumber.restype = ctypes.c_bool
-        self._vcdll.Dev_SetSerialNumber.restype = ctypes.c_bool
-        self._vcdll.Dev_GetSensorDetected.restype = ctypes.c_bool
-        self._vcdll.Dev_GetCurrentSensorNumber.restype = ctypes.c_bool
-        self._vcdll.Dev_SetCurrentSensorNumber.restype = ctypes.c_bool
-        #self._vcdll.Dev_GetCurrentLaserSetting.restype = ctypes.c_bool
-        self._vcdll.Dev_SetCurrentLaserSetting.restype = ctypes.c_bool
-        #self._vcdll.Dev_GetLaserOnOff.restype = ctypes.c_bool
-        #self._vcdll.Dev_SetLaserOnOff.restype = ctypes.c_bool
+        self._vcdll.Dev_Stop.argtypes = [ctypes.c_void_p,]
+        # void* Dev_GetBuffer(DevObject* self, int milsec);
+        self._vcdll.Dev_GetBuffer.restype = ctypes.c_void_p
+        self._vcdll.Dev_Stop.argtypes = [ctypes.c_void_p, ctypes.c_int,]
+        #void* Dev_GetBufferRaw8(DevObject* self, int milsec);
+        #bool Dev_StillTrigger(DevObject* self);
         self._vcdll.Dev_StillTrigger.restype = ctypes.c_bool
-        self._vcdll.Dev_GetStillBuffer.restype  = ctypes.c_long
-        self._vcdll.Dev_GetBuffer.restype = ctypes.c_long
+        self._vcdll.Dev_StillTrigger.argtypes = [ctypes.c_void_p,]
+        # void* Dev_GetStillBuffer(DevObject* self, int milsec);
+        self._vcdll.Dev_GetStillBuffer.restype = ctypes.c_void_p
+        self._vcdll.Dev_StillTrigger.argtypes = [ctypes.c_void_p, ctypes.c_int,]
+        # bool Dev_GetExposureRange(DevObject* self, long* min, long* max, long* step, long* def);
+        # bool Dev_GetExposure(DevObject* self, long* exposure);
+        # bool Dev_SetExposure(DevObject* self, long exposure);
+        self._vcdll.Dev_SetExposure.restype = ctypes.c_bool
+        self._vcdll.Dev_SetExposure.argtypes = [ctypes.c_void_p, ctypes.c_long,]
+        # bool Dev_GetGainRange(DevObject* self, long* min, long* max, long* step, long* def);
+        # bool Dev_GetGain(DevObject* self, long* gain);
+        # bool Dev_SetGain(DevObject* self, long gain);
+        self._vcdll.Dev_SetGain.restype = ctypes.c_bool
+        self._vcdll.Dev_SetGain.argtypes = [ctypes.c_void_p, ctypes.c_long,]
+        # bool Dev_GetCurrentLaserNumber(DevObject* self, long* number);
+        # bool Dev_SetCurrentLaserNumber(DevObject* self, long number);
+        self._vcdll.Dev_SetCurrentLaserNumber.restype = ctypes.c_bool
+        self._vcdll.Dev_SetCurrentLaserNumber.argtypes = [ctypes.c_void_p, ctypes.c_long,]
+        # bool Dev_GetSensorReadoutDelay(DevObject* self, long* delay);
+        # bool Dev_SetSensorReadoutDelay(DevObject* self, long delay);
+        # bool Dev_GetSensorFlip(DevObject* self, long* horizontalMirror, long* verticalFlip);
+        # bool Dev_SetSensorFlip(DevObject* self, long horizontalMirror, long verticalFlip);
+        # bool Dev_GetCanStillCapture(DevObject* self, long* canStillCapture);
+        # bool Dev_GetSensorPower(DevObject* self, long* onOff);
+        # bool Dev_SetSensorPower(DevObject* self, long onOff);
+        # bool Dev_GetSensorDetected(DevObject* self, long* detected);
+        self._vcdll.Dev_GetSensorDetected.restype = ctypes.c_bool
+        self._vcdll.Dev_GetSensorDetected.argtypes = [ctypes.c_void_p, ctypes.c_void_p,]
+        # Dev_GetCurrentSensorNumber(DevObject* self, long* number);
+        # bool Dev_SetCurrentSensorNumber(DevObject* self, long number);
+        self._vcdll.Dev_SetCurrentSensorNumber.restype = ctypes.c_bool
+        self._vcdll.Dev_GetSensorDetected.argtypes = [ctypes.c_void_p, ctypes.c_long,]
+        # bool Dev_GetCurrentLaserSetting(DevObject* self, long* current, long* duration);
+        # bool Dev_SetCurrentLaserSetting(DevObject* self, long current, long duration);
+        self._vcdll.Dev_SetCurrentLaserSetting.restype = ctypes.c_bool
+        self._vcdll.Dev_GetSensorDetected.argtypes = [ctypes.c_void_p, ctypes.c_long, ctypes.c_long,]
+        # bool Dev_GetLaserOnOff(DevObject* self, long* onOff);
+        # bool Dev_SetLaserOnOff(DevObject* self, long onOff);
+        # bool Dev_GetSensorRegister(DevObject* self, unsigned short addr, unsigned short length, unsigned short* value);
+        # bool Dev_SetSensorRegister(DevObject* self, unsigned short addr, unsigned short length, unsigned short value);
+        # bool Dev_GetSerialNumber(DevObject* self, void* buff, long length);
+        self._vcdll.Dev_GetSerialNumber.restype = ctypes.c_bool
+        self._vcdll.Dev_GetSerialNumber.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long,]
+        #bool Dev_SetSerialNumber(DevObject* self, void* buff, long length);
+        self._vcdll.Dev_SetSerialNumber.restype = ctypes.c_bool
+        self._vcdll.Dev_SetSerialNumber.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long,]
     #
     
     def __del__(self):
