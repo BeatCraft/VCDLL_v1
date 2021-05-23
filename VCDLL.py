@@ -496,7 +496,7 @@ def main():
     vc.set_gain(d_id, gain)
     #vc.select_laser(d_id, 0)
     vc.trigger(d_id, s_id)
-    buf0 = vc.get_buffer(d_id, s_id)
+    buf = vc.get_buffer(d_id, s_id)
     #
     #
     #
