@@ -443,7 +443,7 @@ def main():
     buf2 = ctypes.c_void_p(None)
     buf3 = ctypes.c_void_p(None)
     
-    dll_path = os.getcwd() + "/libVC96.so"
+    dll_path = os.getcwd() + "/vcdll/libVCDLL.so"
     vc = VidepCapture(dll_path)
     vc = VidepCapture()
     # objects for all connected decives are allocated.
