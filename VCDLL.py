@@ -418,9 +418,9 @@ class VidepCapture():
         to = ctypes.c_int(timeout)
         #
         obj = self._dev_list[d_id][0]
-        p = self._vcdll.Dev_GetStillBuffer(obj, to)
-        if p:
-            buffer = p
+        buffer = self._vcdll.Dev_GetStillBuffer(obj, to)
+        #if p:
+        #    buffer = p
         #
         return buffer
         # returns 0 if success, …,
