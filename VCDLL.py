@@ -14,7 +14,7 @@ from operator import itemgetter
 #
 #
 #
-DEBUG = 0
+DEBUG = 1
 #
 NUM_DEVICE = 1
 NUM_SENSOR = 8
