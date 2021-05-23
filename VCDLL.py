@@ -120,7 +120,7 @@ class VidepCapture():
         #
         self._vcdll.Dev_Initialize() # a ligacy from Win32
         # allocate objects for USB devices
-        num_device = self.enumerate_devices()
+        num_device = NUM_DEVICE#self.enumerate_devices()
         for i in range(num_device):
             buf = ctypes.create_string_buffer(10)
             obj = ctypes.c_void_p(self._vcdll.Dev_NewObject(i))
@@ -149,6 +149,9 @@ class VidepCapture():
     def enumerate_devices(self):
         if DEBUG:
             print("VidepCapture::enumerate_devices()")
+        #
+        return 1 # obsolute
+        #
         if self._vcdll is None:
             return 1
         #
@@ -205,6 +208,9 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        sn = "0" + "12345" + "67" # dummy
+        return sn
+        #
         buf = ctypes.create_string_buffer(10)
         obj = self._dev_list[d_id][0]
         self._vcdll.Dev_GetSerialNumber(obj, buf, 8)
@@ -218,13 +224,14 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        return 0 # dummy
+        #
         if len(sn)>8:
             return 1
         #
         buf = ctypes.create_string_buffer(sn)
         obj = self._dev_list[d_id][0]
         self._vcdll.Dev_SetSerialNumber(obj, buf, 8)
-
         return 0
     
     # all sensors on the device have the same gain setting
