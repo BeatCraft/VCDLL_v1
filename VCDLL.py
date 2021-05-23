@@ -453,12 +453,11 @@ def main():
     dll_path = os.getcwd() + "/vcdll/libVCDLL.so"
     vc = VidepCapture(dll_path)
     vc = VidepCapture()
-    # objects for all connected decives are allocated.
+    #
     vc.initialize()
-    #print vc.get_device_sn(0)
-    #print vc.set_device_sn(0, "20000000")
-    #print vc.get_device_sn(0)
-
+    vc.start_device(0)
+    time.sleep(5)
+    vc.stop_device(0)
     return 0
     
     
