@@ -25,7 +25,7 @@ NUM_LD = 4
 # sensor : OVT CMOS Camera Sensor
 #
 class VidepCapture():
-    def __init__(self):
+    def __init__(self, path=None):
         if DEBUG:
             print("VidepCapture::__init__()")
         #
@@ -34,28 +34,26 @@ class VidepCapture():
         # keep valus for all LDs
         self._ld_current_list = []
         self._ld_durration_list = []
-        # affects only selected sensor
-        #self._ld_exposure_list = []
-        #self._ld_gain_list = []
-        # image orientation : flip/mirroe
-        
-        
-        # load shared lib
-        try:
-            if sys.platform.startswith('darwin'):
-                print("macOS")
-                self._vcdll = ctypes.cdll.LoadLibrary("/Users/lesser/VCDLL_dummy/VCDLL.dylib")
-            elif sys.platform.startswith('linux'):
+
+        if path is None:
+            path = "/home/root/VCDLL_v1/vcdll/libVCDLL.so"
+        #
+        if sys.platform.startswith('linux'):
+            if DEBUG:
                 print("linux")
-                self._vcdll = ctypes.cdll.LoadLibrary("/home/beat/LFI/libVCDLL.so")
-            else:
-                print("error : platform is not suppoerted")
-                return None
             #
+        else:
+            print("error : platform is not suppoerted")
+            return None
+        #
+        try:
+            self._vcdll = ctypes.cdll.LoadLibrary(path)
         except:
-            print("error : DLL")
+            print("error : DLL path")
             self._vcdll = None
             return None
+        #
+        #
         #
         self._vcdll.Dev_NewObject.restype = ctypes.c_long
         self._vcdll.Dev_EnumDevice.restype = ctypes.c_long
@@ -445,6 +443,8 @@ def main():
     buf2 = ctypes.c_void_p(None)
     buf3 = ctypes.c_void_p(None)
     
+    dll_path = os.getcwd() + "/libVC96.so"
+    vc = VidepCapture(dll_path)
     vc = VidepCapture()
     # objects for all connected decives are allocated.
     vc.initialize()
