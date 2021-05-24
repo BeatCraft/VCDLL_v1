@@ -20,7 +20,11 @@ class BCDeviceList:
     device_list = [0];  # 0 - 1
     ld_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];  # 0 - 15
     sensor_list = [0, 1, 2, 3, 4, 5, 6, 7]; # 0 - 8
-    ld_by_sensor =[ [0, 1, 2],  [4, 5, 6], [8, 9, 10], [12, 13, 14]]
+    ld_table =[ [[0, 1, 2], [0, 1, 2], [0, 1, 2], [0, 1, 2],
+                 [4, 5, 6], [4, 5, 6], [4, 5, 6], [4, 5, 6]],
+                [[8, 9, 10], [8, 9, 10], [8, 9, 10], [8, 9, 10],
+                 [12, 13, 14], [12, 13, 14], [12, 13, 14], [12, 13, 14]]
+                ]
 
 def BCPreparation(vc):
     pass
@@ -73,7 +77,7 @@ def BCCaptureTest():
                 buff_list.append(buff)
             #
             k = 0
-            for ld_id in dl.ld_by_sensor[sensor_id/4]:
+            for ld_id in dl.ld_table[dev_id][sensor_id]:
                 fname = "cap_" + str(dev_id) + "_" + str(sensor_id) +"_" + str(ld_id) + ".raw";
                 print("### fname:",fname);
                 image = ctypes.string_at(buff_list[k] , 5664 * 4248 * 2)
