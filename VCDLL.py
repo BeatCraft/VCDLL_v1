@@ -107,6 +107,8 @@ class VidepCapture():
         # bool Dev_SetSensorReadoutDelay(DevObject* self, long delay);
         # bool Dev_GetSensorFlip(DevObject* self, long* horizontalMirror, long* verticalFlip);
         # bool Dev_SetSensorFlip(DevObject* self, long horizontalMirror, long verticalFlip);
+        self._vcdll.Dev_SetSensorFlip.restype = ctypes.c_bool
+        self._vcdll.Dev_SetSensorFlip.argtypes = [ctypes.c_void_p, ctypes.c_long, ctypes.c_long,]
         # bool Dev_GetCanStillCapture(DevObject* self, long* canStillCapture);
         # bool Dev_GetSensorPower(DevObject* self, long* onOff);
         # bool Dev_SetSensorPower(DevObject* self, long onOff);
@@ -123,6 +125,8 @@ class VidepCapture():
         self._vcdll.Dev_SetCurrentLaserSetting.argtypes = [ctypes.c_void_p, ctypes.c_long, ctypes.c_long,]
         # bool Dev_GetLaserOnOff(DevObject* self, long* onOff);
         # bool Dev_SetLaserOnOff(DevObject* self, long onOff);
+        self._vcdll.Dev_SetLaserOnOff.restype = ctypes.c_bool
+        self._vcdll.Dev_SetLaserOnOff.argtypes = [ctypes.c_void_p, ctypes.c_long,]
         # bool Dev_GetSensorRegister(DevObject* self, unsigned short addr, unsigned short length, unsigned short* value);
         # bool Dev_SetSensorRegister(DevObject* self, unsigned short addr, unsigned short length, unsigned short value);
         # bool Dev_GetSerialNumber(DevObject* self, void* buff, long length);
@@ -152,8 +156,7 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
-        self._vcdll.Dev_Initialize() # a ligacy from Win32
-        # allocate objects for USB devices
+        self._vcdll.Dev_Initialize()
         num_device = self.enumerate_devices()
         if DEBUG:
             print("num_device=%d" % (num_device))
@@ -161,25 +164,18 @@ class VidepCapture():
         for i in range(num_device):
             buf = ctypes.create_string_buffer(10)
             obj = ctypes.c_void_p(self._vcdll.Dev_NewObject(i))
+            self._vcdll.Dev_SetSensorPower(obj, 1);
+            #
             self._vcdll.Dev_GetSerialNumber(obj, buf, 8)
             line = "%s" % buf.value.decode()
             sn = (obj, line[:1], line[1:6], line[6:8])
             self._dev_list.append(sn)
-        #
-        # sort objects by SN (indexing devices depends on power-up timing)
-        self._dev_list.sort(key=itemgetter(3))
-        #
-        current = 0 #50
-        duration = 0 #10000
-        exposure = 0
-        gain = 0
-        for i in range(num_device):
-            self._ld_current_list.append([current]*NUM_LD)
-            self._ld_durration_list.append([duration]*NUM_LD)
             #
-            if DEBUG:
-                num_sensor = self.get_sensor_detected(i)
-                print("num_sensor=%d" % (num_sensor))
+            for j in range(NUM_SENSOR):
+                self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
+                self._vcdll.Dev_SetGain(obj, ctypes.c_long(1))
+                self._vcdll.Dev_SetExposure(obj, ctypes.c_long(4500))
+                self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1),)
             #
         #
         return 0
@@ -232,8 +228,8 @@ class VidepCapture():
         else:
             return 1
         #
-        self._vcdll.Dev_SetFormatIndex(obj, 0)
-        self._vcdll.Dev_SetStillFormatIndex(obj, 0)
+        #self._vcdll.Dev_SetFormatIndex(obj, 0)
+        #self._vcdll.Dev_SetStillFormatIndex(obj, 0)
         self._vcdll.Dev_Start(obj)
         return 0
 
@@ -387,9 +383,19 @@ class VidepCapture():
         obj = self._dev_list[d_id][0]
         # select a sensor to capture
         self._vcdll.Dev_SetCurrentSensorNumber(obj, s_id)
-        
         return 0
 
+    def set_laser_onoff(self, d_id , s_id, sw):
+        if DEBUG:
+            print("VidepCapture::set_laser_onoff(%d, %d, %d)" % (d_id, s_id, sw))
+        #
+        if self._vcdll is None:
+            return 1
+        #
+        obj = self._dev_list[d_id][0]
+        vc.Dev_SetLaserOnOff(obj, ctypes.c_long(sw))
+        return 0
+        
     # Acquisition:
     #   triggers a sequence of acquisitions
     #   on the s_id given the laser channel configuration
@@ -466,14 +472,11 @@ def main():
     argvs = sys.argv
     argc = len(argvs)
     #
-    d_id = 0 # decice id : 0 - 7
-    s_id = 0 # sensor id : 0 - 3
+    d_id = 0 # device id : 0
+    s_id = 0 # sensor id : 0 - 7
     l_id = 0 # laser id : 0 - 3 (LDC suppots 4 channels but LS has only 3 LDs.)
-    current = 50000
+    current = 30000
     duration = 10000
-    exposure = 100
-    gain = 0
-    
     # buf0 : size = 5664 x 4248 x 2 x 4
     #   sensor_0+LD0, sensor_0+LD1, sensor_0+LD2, sensor_0+LD3 @device_0
     # buf1 : size = 5664 x 4248 x 2 x 4
@@ -493,22 +496,17 @@ def main():
     #
     vc.initialize()
     vc.start_device(0)
-    time.sleep(1)
     #
+    # Dev_SetCurrentLaserNumber(dev, j);
+    vc.set_current_laser_number(d_id, l_id)
+    # Dev_SetCurrentLaserSetting(dev, 30000, 10000);
+    vc.set_current_laser_setting(d_id, l_id, current, duration)
+    # Dev_SetLaserOnOff(dev, 1);
+    vc.set_laser_onoff(d_id , s_id, 1)
+    # unsigned char* buffer = Dev_GetBuffer(dev, 10000);
+    # Dev_SetLaserOnOff(dev, 0);
+    vc.set_laser_onoff(d_id , s_id, 1)
     #
-    #
-    vc.set_laser_setting(d_id , l_id , current, duration)
-    vc.set_exposure(d_id, exposure)
-    vc.set_gain(d_id, gain)
-    #vc.select_laser(d_id, l_id)
-    vc.trigger(d_id, s_id)
-    buf = vc.get_buffer(d_id, s_id)
-    print("kkk")
-    print(buf)
-    #
-    #
-    #
-    time.sleep(1)
     vc.stop_device(0)
     vc.terminate()
     return 0
