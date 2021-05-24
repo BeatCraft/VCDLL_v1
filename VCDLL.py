@@ -390,7 +390,7 @@ class VidepCapture():
 
     def set_laser_onoff(self, d_id, sw):
         if DEBUG:
-            print("VidepCapture::set_laser_onoff(%d, %d, %d)" % (d_id, sw))
+            print("VidepCapture::set_laser_onoff(%d, %d)" % (d_id, sw))
         #
         if self._vcdll is None:
             return 1
