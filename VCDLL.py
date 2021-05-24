@@ -154,7 +154,10 @@ class VidepCapture():
         #
         self._vcdll.Dev_Initialize() # a ligacy from Win32
         # allocate objects for USB devices
-        num_device = NUM_DEVICE#self.enumerate_devices()
+        num_device = self.enumerate_devices()
+        if DEBUG:
+            print("num_device=%d" % (num_device))
+        #
         for i in range(num_device):
             buf = ctypes.create_string_buffer(10)
             obj = ctypes.c_void_p(self._vcdll.Dev_NewObject(i))
@@ -165,7 +168,7 @@ class VidepCapture():
         #
         # sort objects by SN (indexing devices depends on power-up timing)
         self._dev_list.sort(key=itemgetter(3))
-        
+        #
         current = 0 #50
         duration = 0 #10000
         exposure = 0
@@ -174,17 +177,16 @@ class VidepCapture():
             self._ld_current_list.append([current]*NUM_LD)
             self._ld_durration_list.append([duration]*NUM_LD)
             #
-            num_sensor = self.get_sensor_detected(i)
-            #self._ld_exposure_list.append([duration]*num_sensor)
-            #self._ld_gain_list.append([gain]*num_sensor)
+            if DEBUG:
+                num_sensor = self.get_sensor_detected(i)
+                print("num_sensor=%d" % (num_sensor))
+            #
         #
         return 0
 
     def enumerate_devices(self):
         if DEBUG:
             print("VidepCapture::enumerate_devices()")
-        #
-        return 1 # obsolute
         #
         if self._vcdll is None:
             return 1
