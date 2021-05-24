@@ -500,7 +500,7 @@ def main():
     vc.set_current_laser_number(d_id, l_id)
     vc.set_current_laser_setting(d_id, l_id, current, duration)
     vc.set_laser_onoff(d_id , s_id, 1)
-    buf = vc get_buffer(d_id, s_id, 10000):
+    buf = vc.get_buffer(d_id, s_id, 10000):
     #
     # save
     #
