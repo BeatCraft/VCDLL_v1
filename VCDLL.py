@@ -419,7 +419,7 @@ class VidepCapture():
         #
         obj = self._dev_list[d_id][0]
         print("ass0")
-        buffer = self._vcdll.Dev_GetStillBuffer(obj, to)
+        buffer = self._vcdll.Dev_GetBuffer(obj, to)
         print("ass1")
         #if p:
         #    buffer = p
