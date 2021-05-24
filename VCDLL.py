@@ -498,7 +498,7 @@ def main():
     buf = vc.get_buffer(d_id, s_id, 10000)
     #
     # save
-    fname = "cap_" + str(dev_id) + "_" + str(s_id) +"_" + str(l_id) + ".raw";
+    fname = "cap_" + str(d_id) + "_" + str(s_id) +"_" + str(l_id) + ".raw";
     print("### fname:",fname);
     image = ctypes.string_at(buff , 5664 * 4248 * 2)
     with open(fname, 'wb') as f:
