@@ -116,11 +116,11 @@ class VidepCapture():
         # Dev_GetCurrentSensorNumber(DevObject* self, long* number);
         # bool Dev_SetCurrentSensorNumber(DevObject* self, long number);
         self._vcdll.Dev_SetCurrentSensorNumber.restype = ctypes.c_bool
-        self._vcdll.Dev_GetSensorDetected.argtypes = [ctypes.c_void_p, ctypes.c_long,]
+        self._vcdll.Dev_SetCurrentSensorNumber.argtypes = [ctypes.c_void_p, ctypes.c_long,]
         # bool Dev_GetCurrentLaserSetting(DevObject* self, long* current, long* duration);
         # bool Dev_SetCurrentLaserSetting(DevObject* self, long current, long duration);
         self._vcdll.Dev_SetCurrentLaserSetting.restype = ctypes.c_bool
-        self._vcdll.Dev_GetSensorDetected.argtypes = [ctypes.c_void_p, ctypes.c_long, ctypes.c_long,]
+        self._vcdll.Dev_SetCurrentLaserSetting.argtypes = [ctypes.c_void_p, ctypes.c_long, ctypes.c_long,]
         # bool Dev_GetLaserOnOff(DevObject* self, long* onOff);
         # bool Dev_SetLaserOnOff(DevObject* self, long onOff);
         # bool Dev_GetSensorRegister(DevObject* self, unsigned short addr, unsigned short length, unsigned short* value);
