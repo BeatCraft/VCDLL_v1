@@ -338,9 +338,8 @@ class VidepCapture():
 
     def set_current_laser_number(self, d_id, l_id):
         if DEBUG:
-            print("VidepCapture::set_current_laser_number(%d, %d, %d)" % (d_id, l_id))
+            print("VidepCapture::set_current_laser_number(%d, %d)" % (d_id, l_id))
         #
-        #print("set_current_laser_number(%d, %d)" % (d_id, l_id))
         if self._vcdll is None:
             return 1
         #
