@@ -505,7 +505,7 @@ def main():
     vc.set_laser_onoff(d_id , s_id, 1)
     # unsigned char* buffer = Dev_GetBuffer(dev, 10000);
     # Dev_SetLaserOnOff(dev, 0);
-    vc.set_laser_onoff(d_id , s_id, 1)
+    vc.set_laser_onoff(d_id , s_id, 0)
     #
     vc.stop_device(0)
     vc.terminate()
