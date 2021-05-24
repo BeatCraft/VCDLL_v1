@@ -54,9 +54,9 @@ def BCCaptureTest():
         #
         for ld_id in dl.ld_list:
             res = vc.select_laser(dev_id, ld_id)
-            vc.set_laser_onoff(dev_id, sensor_id, 1)
+            vc.set_laser_onoff(dev_id, 1)
             res = vc.set_current_laser_setting(dev_id, current, duration)
-            vc.set_laser_onoff(dev_id , sensor_id, 0)
+            vc.set_laser_onoff(dev_id, 0)
         #
     #
     print("# capture")
@@ -71,9 +71,9 @@ def BCCaptureTest():
             for ld_id in dl.ld_table[dev_id][sensor_id]:
                 print("### ld:", ld_id);
                 res = vc.select_laser(dev_id, ld_id)
-                vc.set_laser_onoff(dev_id, sensor_id, 1)
+                vc.set_laser_onoff(dev_id, 1)
                 buff = vc.get_buffer(dev_id, 10000) # args changes since v0
-                vc.set_laser_onoff(dev_id , sensor_id, 0)
+                vc.set_laser_onoff(dev_id, 0)
                 print(type(buff));
                 buff_list.append(buff)
             #
