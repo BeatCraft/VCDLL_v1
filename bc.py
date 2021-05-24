@@ -52,6 +52,7 @@ def BCCaptureTest():
             vc.select_sensor(dev_id , sensor_id)
             #vc.set_exposure(dev_id, exposure)
             #vc.set_gain(dev_id, gain)
+            
             buff_list = []
             for ld_id in dl.ld_list:
                 print("### ld:",ld_id);
