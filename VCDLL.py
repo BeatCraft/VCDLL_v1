@@ -413,7 +413,7 @@ class VidepCapture():
         self._vcdll.Dev_StillTrigger(obj)
         return 0 # success
         
-    def get_buffer(self, d_id, s_id):
+    def get_buffer(self, d_id, s_id, timeout=10000):
         if DEBUG:
             print("VidepCapture::get_buffer(%d, %d)" % (d_id, s_id))
         #
@@ -421,12 +421,12 @@ class VidepCapture():
         if self._vcdll is None:
             return buffer
         #
-        timeout = 2000 # dummy
-        to = ctypes.c_int(timeout)
+        #timeout = 2000 # dummy
+        #to = ctypes.c_int(timeout)
         #
         obj = self._dev_list[d_id][0]
         print("ass0")
-        buffer = self._vcdll.Dev_GetBuffer(obj, to)
+        buffer = self._vcdll.Dev_GetBuffer(obj, ctypes.c_int(timeout))
         print("ass1")
         #if p:
         #    buffer = p
@@ -497,14 +497,13 @@ def main():
     vc.initialize()
     vc.start_device(0)
     #
-    # Dev_SetCurrentLaserNumber(dev, j);
     vc.set_current_laser_number(d_id, l_id)
-    # Dev_SetCurrentLaserSetting(dev, 30000, 10000);
     vc.set_current_laser_setting(d_id, l_id, current, duration)
-    # Dev_SetLaserOnOff(dev, 1);
     vc.set_laser_onoff(d_id , s_id, 1)
-    # unsigned char* buffer = Dev_GetBuffer(dev, 10000);
-    # Dev_SetLaserOnOff(dev, 0);
+    buf = vc get_buffer(d_id, s_id, 10000):
+    #
+    # save
+    #
     vc.set_laser_onoff(d_id , s_id, 0)
     #
     vc.stop_device(0)
