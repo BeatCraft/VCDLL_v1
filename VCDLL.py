@@ -421,13 +421,8 @@ class VidepCapture():
         if self._vcdll is None:
             return buffer
         #
-        #timeout = 2000 # dummy
-        #to = ctypes.c_int(timeout)
-        #
         obj = self._dev_list[d_id][0]
-        print("ass0")
         buffer = self._vcdll.Dev_GetBuffer(obj, ctypes.c_int(timeout))
-        print("ass1")
         #if p:
         #    buffer = p
         #
@@ -503,6 +498,11 @@ def main():
     buf = vc.get_buffer(d_id, s_id, 10000)
     #
     # save
+    fname = "cap_" + str(dev_id) + "_" + str(s_id) +"_" + str(l_id) + ".raw";
+    print("### fname:",fname);
+    image = ctypes.string_at(buff , 5664 * 4248 * 2)
+    with open(fname, 'wb') as f:
+        f.write(image)
     #
     vc.set_laser_onoff(d_id , s_id, 0)
     #
