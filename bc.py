@@ -19,7 +19,7 @@ import VCDLL
 class BCDeviceList:
     device_list = [0];  # 0 - 1
     ld_list = [0, 1, 2];  # 0 - 2
-    sensor_list = [0, 1, 2, 3]; # 0 - 3
+    sensor_list = [0, 1, 2, 3]; # 0 - 8
 
 def BCPreparation(vc):
     pass
@@ -55,7 +55,7 @@ def BCCaptureTest():
             buff_list = []
             for ld_id in dl.ld_list:
                 print("### ld:",ld_id);
-                res = vc.select_laser(dev_id, ld_id)
+                res = vc.select_laser(dev_id, sensor_id*3+ld_id)
                 res = vc.set_current_laser_setting(dev_id, current, duration)
                 vc.set_laser_onoff(dev_id , sensor_id, 1)
                 buff = vc.get_buffer(dev_id, sensor_id, 10000)
