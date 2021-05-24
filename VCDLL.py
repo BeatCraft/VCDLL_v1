@@ -319,7 +319,7 @@ class VidepCapture():
 
     # 'current' means selected.
     # arg:current is electric current
-    def set_current_laser_setting(self, d_id, current, duration):
+    def set_current_laser_setting(self, d_id, l_id, current, duration):
         if DEBUG:
             print("VidepCapture::set_current_laser_setting(%d, %d, %d)" % (d_id, l_id, current, duration))
         #
@@ -375,7 +375,7 @@ class VidepCapture():
         if ret>0:
             return 1
         #
-        return self.set_current_laser_setting(d_id, current, duration)
+        return self.set_current_laser_setting(d_id, l_id, current, duration)
 
     def select_sensor(self, d_id , s_id):
         if DEBUG:
