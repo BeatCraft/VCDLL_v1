@@ -33,12 +33,13 @@ def BCCaptureTest():
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     start = time.time()
 
+    # default values are set in VidepCapture::initialize()
     duration = 10000;
     current = 30000;
     exposure = 4500
     gain = 0 # 0 - 31
-    buff_list = []
     
+    buff_list = []
     dl = BCDeviceList();
     vc = VCDLL.VidepCapture()
     vc.initialize()
@@ -53,6 +54,7 @@ def BCCaptureTest():
         #
         for ld_id in dl.ld_list:
             res = vc.select_laser(dev_id, ld_id)
+            vc.set_laser_onoff(dev_id , sensor_id, 0)
             res = vc.set_current_laser_setting(dev_id, current, duration)
         #
     #

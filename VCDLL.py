@@ -18,7 +18,7 @@ DEBUG = 1
 #
 NUM_DEVICE = 1
 NUM_SENSOR = 8
-NUM_LD = 3
+NUM_LD = 16
 #
 # device : CX3 based USB Capture device
 #           (dev file index, dev_object ptr, sn_gen, sn_module, sn_position)
@@ -173,10 +173,14 @@ class VidepCapture():
             #
             for j in range(NUM_SENSOR):
                 self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
-                self._vcdll.Dev_SetGain(obj, ctypes.c_long(1))
+                self._vcdll.Dev_SetGain(obj, ctypes.c_long(0))
                 self._vcdll.Dev_SetExposure(obj, ctypes.c_long(4500))
                 self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1),)
             #
+        #
+        for k in range(NUM_LD):
+            self._vcdll.Dev_SetCurrentLaserNumber(obj, ctypes.c_long(k))
+            self._vcdll.Dev_SetCurrentLaserSetting(obj, ctypes.c_long(0), ctypes.c_long(10000))
         #
         return 0
 
