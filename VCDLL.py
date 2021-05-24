@@ -317,7 +317,7 @@ class VidepCapture():
     # arg:current is electric current
     def set_current_laser_setting(self, d_id, l_id, current, duration):
         if DEBUG:
-            print("VidepCapture::set_current_laser_setting(%d, %d, %d)" % (d_id, l_id, current, duration))
+            print("VidepCapture::set_current_laser_setting(%d, %d, %d, %d)" % (d_id, l_id, current, duration))
         #
         #print("set_current_laser_setting(%d, %d, %d)" % (d_id, current, duration))
         if self._vcdll is None:
