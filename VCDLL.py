@@ -315,11 +315,10 @@ class VidepCapture():
 
     # 'current' means selected.
     # arg:current is electric current
-    def set_current_laser_setting(self, d_id, l_id, current, duration):
+    def set_current_laser_setting(self, d_id, current, duration):
         if DEBUG:
-            print("VidepCapture::set_current_laser_setting(%d, %d, %d, %d)" % (d_id, l_id, current, duration))
+            print("VidepCapture::set_current_laser_setting(%d, %d, %d)" % (d_id, current, duration))
         #
-        #print("set_current_laser_setting(%d, %d, %d)" % (d_id, current, duration))
         if self._vcdll is None:
             return 1
         #
@@ -371,7 +370,7 @@ class VidepCapture():
         if ret>0:
             return 1
         #
-        return self.set_current_laser_setting(d_id, l_id, current, duration)
+        return self.set_current_laser_setting(d_id, current, duration)
 
     def select_sensor(self, d_id , s_id):
         if DEBUG:
@@ -401,15 +400,14 @@ class VidepCapture():
     #   on the s_id given the laser channel configuration
     def trigger(self, d_id , s_id):
         if DEBUG:
-            print("VidepCapture::trigger(%d, %d)" % (d_id, s_id))
+            print("VidepCapture::trigger(%d, %d) : not implemented" % (d_id, s_id))
+        #
+        return 1
         #
         if self._vcdll is None:
             return 1
         #
         obj = self._dev_list[d_id][0]
-        # select a sensor to capture
-        #self._vcdll.Dev_SetCurrentSensorNumber(obj, s_id)
-        # capture
         self._vcdll.Dev_StillTrigger(obj)
         return 0 # success
         
@@ -423,9 +421,6 @@ class VidepCapture():
         #
         obj = self._dev_list[d_id][0]
         buffer = self._vcdll.Dev_GetBuffer(obj, ctypes.c_int(timeout))
-        #if p:
-        #    buffer = p
-        #
         return buffer
         # returns 0 if success, …,
         # buffer pointer point to an array in RAM of size 4 x 5664 x 4248 x 2 bytes
@@ -493,18 +488,16 @@ def main():
     vc.start_device(0)
     #
     vc.set_current_laser_number(d_id, l_id)
-    vc.set_current_laser_setting(d_id, l_id, current, duration)
+    vc.set_current_laser_setting(d_id, current, duration)
     vc.set_laser_onoff(d_id , s_id, 1)
     buf = vc.get_buffer(d_id, s_id, 10000)
-    #
+    vc.set_laser_onoff(d_id , s_id, 0)
     # save
     fname = "cap_" + str(d_id) + "_" + str(s_id) +"_" + str(l_id) + ".raw";
     print("### fname:",fname);
     image = ctypes.string_at(buf , 5664 * 4248 * 2)
     with open(fname, 'wb') as f:
         f.write(image)
-    #
-    vc.set_laser_onoff(d_id , s_id, 0)
     #
     vc.stop_device(0)
     vc.terminate()
