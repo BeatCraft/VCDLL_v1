@@ -393,7 +393,7 @@ class VidepCapture():
             return 1
         #
         obj = self._dev_list[d_id][0]
-        vc.Dev_SetLaserOnOff(obj, ctypes.c_long(sw))
+        self.Dev_SetLaserOnOff(obj, ctypes.c_long(sw))
         return 0
         
     # Acquisition:
