@@ -48,14 +48,14 @@ def BCCaptureTest():
         #
         vc.start_device(dev_id);
         for sensor_id in dl.sensor_list:
-            print("### sensor:", sensor_id);
-            vc.select_sensor(dev_id , sensor_id);
-            #vc.set_exposure(dev_id, exposure);
-            #vc.set_gain(dev_id, gain);
+            print("### sensor:", sensor_id)
+            vc.select_sensor(dev_id , sensor_id)
+            #vc.set_exposure(dev_id, exposure)
+            #vc.set_gain(dev_id, gain)
             buff_list = []
             for ld_id in dl.ld_list:
                 print("### ld:",ld_id);
-                res = vc.select_laser(dev_id, ld_id):
+                res = vc.select_laser(dev_id, ld_id)
                 res = vc.set_current_laser_setting(dev_id, current, duration)
                 vc.set_laser_onoff(dev_id , sensor_id, 1)
                 buff = vc.get_buffer(dev_id, sensor_id, 10000)
