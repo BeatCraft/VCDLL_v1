@@ -179,7 +179,7 @@ class VidepCapture():
             #
         #
         for k in range(NUM_LD):
-            self._vcdll.Dev_SetCurrentLaserNumber(obj, ctypes.c_long(k))
+            self._vcdll.Dev_SetCurrentLaserNumber(obj, k)#ctypes.c_long(k))
             self._vcdll.Dev_SetCurrentLaserSetting(obj, ctypes.c_long(0), ctypes.c_long(10000))
         #
         return 0
@@ -221,7 +221,7 @@ class VidepCapture():
     # returns 0 if success
     def start_device(self, d_id):
         if DEBUG:
-            print("VidepCapture::start_device()")
+            print("VidepCapture::start_device(%d)" % (d_id))
         #
         if self._vcdll is None:
             return 1
@@ -234,8 +234,11 @@ class VidepCapture():
         #
         #self._vcdll.Dev_SetFormatIndex(obj, 0)
         #self._vcdll.Dev_SetStillFormatIndex(obj, 0)
-        self._vcdll.Dev_Start(obj)
-        return 0
+        ret = self._vcdll.Dev_Start(obj)
+        if ret:
+            return 0
+        #
+        return 1
 
     def get_device_sn(self, d_id):
         if DEBUG:
@@ -477,14 +480,15 @@ def main():
     vc = VidepCapture()
     #
     vc.initialize()
+    vc.select_sensor(d_id , s_id)
     vc.start_device(0)
     #
-    vc.set_current_laser_number(d_id, l_id) # select_laser()
-    vc.set_current_laser_setting(d_id, current, duration)
-    vc.select_sensor(d_id , s_id)
-    vc.set_laser_onoff(d_id, 1)
+#    vc.set_current_laser_number(d_id, l_id) # select_laser()
+#    vc.set_current_laser_setting(d_id, current, duration)
+    #vc.select_sensor(d_id , s_id)
+#    vc.set_laser_onoff(d_id, 1)
     buf = vc.get_buffer(d_id, 10000)
-    vc.set_laser_onoff(d_id, 0)
+#    vc.set_laser_onoff(d_id, 0)
     # save
     fname = "cap_" + str(d_id) + "_" + str(s_id) +"_" + str(l_id) + ".raw";
     print("### fname:",fname);
