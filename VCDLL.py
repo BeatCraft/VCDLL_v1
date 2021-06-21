@@ -27,7 +27,7 @@ NUM_LD = 16
 class VidepCapture():
     def __init__(self, path=None):
         if DEBUG:
-            print("VidepCapture::__init__()")
+            print("VidepCapture::__init__(%s)" % path)
         #
         self._vcdll = None
         self._dev_list = []
