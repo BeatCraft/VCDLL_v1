@@ -487,10 +487,10 @@ def main():
         return 0
     #
     vc.start_device(d_id)
+    #
     vc.set_laser_onoff(d_id, 1)
     buf = vc.get_buffer(d_id, 10000)
     vc.set_laser_onoff(d_id, 0)
-    vc.stop_device(d_id)
     # save
     fname = "cap_" + str(d_id) + "_" + str(s_id) +"_" + str(l_id) + ".raw";
     print("### fname:",fname);
@@ -498,6 +498,8 @@ def main():
     with open(fname, 'wb') as f:
         f.write(image)
     #
+    #
+    vc.stop_device(d_id)
     vc.terminate()
     return 0
 #
