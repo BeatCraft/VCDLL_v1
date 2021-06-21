@@ -469,8 +469,8 @@ def main():
     argvs = sys.argv
     argc = len(argvs)
     #
-    d_id = 0 # device id : 0 or 1 but 1 is dummy device
-    s_id = 1 # sensor id : 0 - 15
+    d_id = 1 # device id : 0 or 1 but 1 is dummy device
+    s_id = 15 # sensor id : 0 - 15
     l_id = 0 # laser id  : 0 - 15 (4 LS and a LS suppots 4 LDs but only 3 LDs implemented on the V1.)
     current = 30000
     duration = 10000
