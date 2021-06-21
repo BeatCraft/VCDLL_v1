@@ -181,9 +181,9 @@ class VidepCapture():
                 #self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1),)
             #
         #
-        for k in range(NUM_LD):
-            self._vcdll.Dev_SetCurrentLaserNumber(obj, k)
-            self._vcdll.Dev_SetCurrentLaserSetting(obj, ctypes.c_long(0), ctypes.c_long(10000))
+#        for k in range(NUM_LD):
+#            self._vcdll.Dev_SetCurrentLaserNumber(obj, k)
+#            self._vcdll.Dev_SetCurrentLaserSetting(obj, ctypes.c_long(0), ctypes.c_long(10000))
         #
         return 0
 
