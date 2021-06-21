@@ -189,12 +189,12 @@ class VidepCapture():
         for j in range(NUM_SENSOR):
             if self._sensor_list[j]:
                 self.select_sensor(d_id , j)
-                self.set_gain(d_id, ctypes.c_long(0))
-                self.set_exposure(d_id, ctypes.c_long(4500))
-                self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1),)
+                self.set_gain(d_id, 0)
+                self.set_exposure(d_id, 4500)
+                self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1))
                 #
                 self.set_current_laser_number(d_id, j)
-                self.set_current_laser_setting(d_id, ctypes.c_long(0), ctypes.c_long(10000))
+                self.set_current_laser_setting(d_id, 0, 10000)
             #
         #
         return 0
