@@ -35,6 +35,7 @@ class VidepCapture():
         # keep valus for all LDs
         self._ld_current_list = []
         self._ld_durration_list = []
+        self._selected_sensor_id = 0
 
         if path is None:
             path = "/home/root/VCDLL_v1/vcdll/libVCDLL.so"
@@ -173,9 +174,10 @@ class VidepCapture():
             self._dev_list.append(sn)
             #
         #
-        obj = self._dev_list[0][0]
+        d_id = 0
+        obj = self._dev_list[d_id][0]
         detected = ctypes.c_long(1)
-        self._vcdll.Dev_GetSensorDetected(obj, ctypes.byref(detected))
+        f = self.get_sensor_detected(d_id)
         f = detected.value
         for i in range(NUM_SENSOR):
             if f & (1<<i):
@@ -184,16 +186,15 @@ class VidepCapture():
                 self._sensor_list.append(0)
             #
         #
-        print(self._sensor_list)
         for j in range(NUM_SENSOR):
             if self._sensor_list[j]:
-                self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
-                self._vcdll.Dev_SetGain(obj, ctypes.c_long(0))
-                self._vcdll.Dev_SetExposure(obj, ctypes.c_long(4500))
+                self.select_sensor(d_id , j)
+                self.set_gain(d_id, ctypes.c_long(0))
+                self.set_exposure(d_id, ctypes.c_long(4500))
                 self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1),)
                 #
-                self._vcdll.Dev_SetCurrentLaserNumber(obj, j)
-                self._vcdll.Dev_SetCurrentLaserSetting(obj, ctypes.c_long(0), ctypes.c_long(10000))
+                self.set_current_laser_number(d_id, j)
+                self.set_current_laser_setting(d_id, ctypes.c_long(0), ctypes.c_long(10000))
             #
         #
         return 0
@@ -211,6 +212,7 @@ class VidepCapture():
         if DEBUG:
             print("VidepCapture::get_sensor_detected(%d)" % d_id)
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         if obj:
             pass
@@ -219,17 +221,8 @@ class VidepCapture():
         #
         detected = ctypes.c_long(0)
         self._vcdll.Dev_GetSensorDetected(obj, ctypes.pointer(detected))
-        v = detected.value
-        if v==0b0001:
-            return 1
-        elif v==0b0011:
-            return 2
-        elif v==0b0111:
-            return 3
-        elif v==0b1111:
-            return 4
-        #
-        return 0
+        # ctypes.byref(detected)
+        return detected.value
 
     # d_id is an uint (we assume 0 7 in current generation devices),
     # returns 0 if success
@@ -263,12 +256,6 @@ class VidepCapture():
         #
         sn = "0" + "12345" + "67" # dummy
         return sn
-        #
-        buf = ctypes.create_string_buffer(10)
-        obj = self._dev_list[d_id][0]
-        self._vcdll.Dev_GetSerialNumber(obj, buf, 8)
-        sn = "%s" % buf.value.decode()
-        return sn
 
     def set_device_sn(self, d_id , sn):
         if DEBUG:
@@ -278,14 +265,6 @@ class VidepCapture():
             return 1
         #
         return 0 # dummy
-        #
-        if len(sn)>8:
-            return 1
-        #
-        buf = ctypes.create_string_buffer(sn)
-        obj = self._dev_list[d_id][0]
-        self._vcdll.Dev_SetSerialNumber(obj, buf, 8)
-        return 0
     
     # all sensors on the device have the same gain setting
     def set_gain(self, d_id, gain):
@@ -295,6 +274,7 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         if obj:
             pass
@@ -311,6 +291,7 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         if obj:
             pass
@@ -343,6 +324,7 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         if obj:
             pass
@@ -359,6 +341,7 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         if obj:
             pass
@@ -381,6 +364,7 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         if obj:
             pass
@@ -400,9 +384,11 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         # select a sensor to capture
         self._vcdll.Dev_SetCurrentSensorNumber(obj, s_id)
+        self._selected_sensor_id = s_id
         return 0
 
     def set_laser_onoff(self, d_id, sw):
@@ -412,25 +398,17 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
         obj = self._dev_list[d_id][0]
         self._vcdll.Dev_SetLaserOnOff(obj, ctypes.c_long(sw))
         return 0
         
-    # Acquisition:
-    #   triggers a sequence of acquisitions
-    #   on the s_id given the laser channel configuration
     def trigger(self, d_id , s_id):
         if DEBUG:
             print("VidepCapture::trigger(%d, %d) : not implemented" % (d_id, s_id))
         #
+        # no in use in V1
         return 1
-        #
-        if self._vcdll is None:
-            return 1
-        #
-        obj = self._dev_list[d_id][0]
-        self._vcdll.Dev_StillTrigger(obj)
-        return 0 # success
     
     def get_buffer(self, d_id, timeout=10000):
         if DEBUG:
@@ -439,6 +417,10 @@ class VidepCapture():
         buffer = ctypes.c_void_p(None)
         if self._vcdll is None:
             return buffer
+        #
+        
+        #
+        #
         #
         obj = self._dev_list[d_id][0]
         buffer = self._vcdll.Dev_GetBuffer(obj, ctypes.c_int(timeout))
