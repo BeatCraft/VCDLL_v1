@@ -186,6 +186,7 @@ class VidepCapture():
                 self._sensor_list.append(0)
             #
         #
+        print(self._sensor_list)
         for j in range(NUM_SENSOR):
             if self.select_sensor(d_id , j)==0:
                 self.set_gain(d_id, 0)
