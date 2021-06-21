@@ -187,8 +187,7 @@ class VidepCapture():
             #
         #
         for j in range(NUM_SENSOR):
-            if self._sensor_list[j]:
-                self.select_sensor(d_id , j)
+            if self.select_sensor(d_id , j)==0:
                 self.set_gain(d_id, 0)
                 self.set_exposure(d_id, 4500)
                 self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1))
@@ -232,14 +231,16 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
+        d_id = 0
+        if self._selected_sensor_id>7:
+            d_id = 1
+        #
         obj = self._dev_list[d_id][0]
         if obj:
             pass
         else:
             return 1
         #
-        #self._vcdll.Dev_SetFormatIndex(obj, 0)
-        #self._vcdll.Dev_SetStillFormatIndex(obj, 0)
         ret = self._vcdll.Dev_Start(obj)
         if ret:
             return 0
@@ -408,7 +409,7 @@ class VidepCapture():
         if DEBUG:
             print("VidepCapture::trigger(%d, %d) : not implemented" % (d_id, s_id))
         #
-        # no in use in V1
+        # not in use for V1
         return 1
     
     def get_buffer(self, d_id, timeout=10000):
@@ -419,22 +420,13 @@ class VidepCapture():
         if self._vcdll is None:
             return buffer
         #
-        
-        #
-        #
+        d_id = 0
+        if self._selected_sensor_id>7:
+            d_id = 1
         #
         obj = self._dev_list[d_id][0]
         buffer = self._vcdll.Dev_GetBuffer(obj, ctypes.c_int(timeout))
         return buffer
-        # returns 0 if success, …,
-        # buffer pointer point to an array in RAM of size 4 x 5664 x 4248 x 2 bytes
-        #       NOTE: each sensor needs this size buffer,
-        #               i.e. 4x 4x 5664x4248x2 bytes are needed per camera)
-        #       NOTE: it’s the responsibility of the ctrl app to read out only the new (valid) data
-        #             and ignore the old data in the buffer,
-        #               i.e. the app has to make sure it strictly follows “trigger getbuffer” sequences
-        #               on any sensor or returns 0
-        #return 0
 
     # stop_device(), then terminate()
     def stop_device(self, d_id):
@@ -443,6 +435,10 @@ class VidepCapture():
         #
         if self._vcdll is None:
             return 1
+        #
+        d_id = 0
+        if self._selected_sensor_id>7:
+            d_id = 1
         #
         obj = self._dev_list[d_id][0];
         self._vcdll.Dev_Stop(obj);
@@ -477,13 +473,12 @@ def main():
     vc = VidepCapture()
     #
     vc.initialize()
-    
-    return 0
-    
     vc.select_laser(d_id, l_id)
     vc.set_current_laser_setting(d_id, current, duration)
+    if vc.select_sensor(d_id , s_id):
+        vc.terminate()
+        return 0
     #
-    vc.select_sensor(d_id , s_id)
     vc.start_device(d_id)
 #    vc.set_laser_onoff(d_id, 1)
     buf = vc.get_buffer(d_id, 10000)
