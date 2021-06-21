@@ -483,6 +483,9 @@ def main():
     vc = VidepCapture()
     #
     vc.initialize()
+    
+    return 0
+    
     vc.select_sensor(d_id , s_id)
     vc.start_device(0)
     #
