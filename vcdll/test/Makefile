@@ -1,7 +1,7 @@
 all: vc
 
 vc: vc.c
-	gcc -g -Wall -pthread -L.. -lVCDLL -o $@ $<
+	gcc -g -Wall -pthread -L.. -o $@ $< -lVCDLL
 
 test:
 	sh test-vc

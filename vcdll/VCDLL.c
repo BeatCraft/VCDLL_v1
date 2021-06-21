@@ -333,7 +333,7 @@ static void* _preview_thread(void* data)
   		
   		if (self->currentImageSize == buf.m.planes[0].bytesused /*buf.bytesused*/) {
   			pthread_mutex_lock(&thread->mutex);
-  			if (self->waitBuffer) {
+  			if (self->waitBuffer && self->waitBufferCount-- == 0) {
   				//fprintf(stdout, "Preview received: waitBuffer true\n");
   				memcpy(priv->preview_buffer[buf.index], self->buffers[buf.index].start, self->currentImageSize);
   				thread->current_buffer_index = buf.index;
@@ -888,6 +888,7 @@ bool open_device(DevObject* self)
 	SensorDevice* dev = &_deviceInfo.devices[self->currentDeviceIndex];
 	
 	/* デバイスのオープン */
+	fprintf(stdout, "open: %s\n", dev->devicePath);
 	self->devfd = v4l2_open(dev->devicePath, O_RDWR | O_NONBLOCK, 0);
 	if (self->devfd < 0) {
 		fprintf(stderr, "Cannot open %s: %d\n",
@@ -896,6 +897,7 @@ bool open_device(DevObject* self)
 	}
 	
 	/* open suvdev */
+	fprintf(stdout, "open: %s\n", dev->subDevicePath);
 	self->subdevfd = v4l2_open(dev->subDevicePath, O_RDWR | O_NONBLOCK, 0);
 	if (self->devfd < 0) {
 		fprintf(stderr, "Cannot open %s: %d\n",
@@ -1179,7 +1181,7 @@ long Dev_EnumDevice(void)
 		}
 		strcpy(_deviceInfo.devices[i].devicePath, deviceName);
 		
-		sprintf(deviceName, "/dev/v4l-subdev%d", i);
+		sprintf(deviceName, "/dev/v4l-subdev%d", i*2);
 		ret = stat(deviceName, &status);
 		if (ret < 0) {
 			fprintf(stderr, "%s not exist\n", deviceName);
@@ -1187,7 +1189,7 @@ long Dev_EnumDevice(void)
 		}
 		strcpy(_deviceInfo.devices[i].subDevicePath, deviceName);
 		
-		sprintf(_deviceInfo.devices[i].deviceName, "LFI4 vi video%d", i);
+		sprintf(_deviceInfo.devices[i].deviceName, "LFI4 v1 video%d", i);
 		
 		num_dev++;
 	}
@@ -1684,6 +1686,7 @@ void* Dev_GetBuffer(DevObject* self, int milsec) {
 	}
 	/* バッファ受信待機状態  */
 	self->waitBuffer = true;
+	self->waitBufferCount = 1;	// skip buffers
 	
 	ret = pthread_cond_timedwait(&thread->cond, &thread->mutex, &ts);
 	if (ret != 0) {
@@ -2446,6 +2449,16 @@ bool Dev_SetSerialNumber(DevObject* self, void* buff, long length)
 	}
 	
 	return true;
+}
+
+bool Dev_SetEnableSensorStream(DevObject* self, long onOff)
+{
+	if (-1 == xioctl(self->subdevfd, LFI4_VIDIOC_ENABLE_STREAM, (void*)&onOff)) {
+  		fprintf(stderr, "LFI4_VIDIOC_ENABLE_STREAM failed\n");
+    	return false;
+    }
+    
+    return true;
 }
 
 #ifndef COMPILE

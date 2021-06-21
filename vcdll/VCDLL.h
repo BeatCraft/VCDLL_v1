@@ -83,6 +83,8 @@ struct io_sensor_register {
 #define LFI4_VIDIOC_SET_SENSOR_REGVALUE	_IOWR('V', BASE_VIDIOC_PRIVATE + 24, struct io_sensor_register*)
 #define LFI4_VIDIOC_GET_SENSOR_REGVALUE	_IOWR('V', BASE_VIDIOC_PRIVATE + 25, struct io_sensor_register*)
 
+#define LFI4_VIDIOC_ENABLE_STREAM		_IOWR('V', BASE_VIDIOC_PRIVATE + 26, unsigned long)
+
 #define CLEAR(x) memset (&(x), 0, sizeof(x))  /* メモリの明示的な初期化 */
 
 #define MAX_DEVICE_NUM		2
@@ -163,6 +165,7 @@ typedef struct {
 	bool			streamingOn;
 	
 	bool			waitBuffer;
+	unsigned long	waitBufferCount;
 	
 	void*			priv;
 	
@@ -234,6 +237,7 @@ bool Dev_SetSensorRegister(DevObject* self, unsigned short addr,
 bool Dev_GetSerialNumber(DevObject* self, void* buff, long length);					/* シリアル番号(文字列)の取得 */
 bool Dev_SetSerialNumber(DevObject* self, void* buff, long length);					/* シリアル番号(文字列)の設定 */
 
-
+// LFI4 v1 two MIPI version only
+bool Dev_SetEnableSensorStream(DevObject* self, long onOff);
 
 #endif
