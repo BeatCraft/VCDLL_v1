@@ -138,6 +138,9 @@ class VidepCapture():
         #bool Dev_SetSerialNumber(DevObject* self, void* buff, long length);
         self._vcdll.Dev_SetSerialNumber.restype = ctypes.c_bool
         self._vcdll.Dev_SetSerialNumber.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_long,]
+        # bool Dev_SetEnableSensorStream(DevObject* self, long onOff);
+        self._vcdll.Dev_SetEnableSensorStream.restype = ctypes.c_bool
+        self._vcdll.Dev_SetEnableSensorStream.argtypes = [ctypes.c_void_p, ctypes.c_long,]
     #
     
     def __del__(self):
@@ -233,7 +236,6 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
-        d_id = 0
         if self._selected_sensor_id>7:
             d_id = 1
         #
@@ -245,9 +247,15 @@ class VidepCapture():
         #
         ret = self._vcdll.Dev_Start(obj)
         if ret:
-            return 0
+            pass
+        else:
+            return 1
         #
-        return 1
+        if d_id==1:
+            obj = self._dev_list[0][0]
+            self._vcdll.Dev_SetEnableSensorStream(obj, 1)
+        #
+        return 0
 
     def get_device_sn(self, d_id):
         if DEBUG:
@@ -438,9 +446,12 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
-        d_id = 0
         if self._selected_sensor_id>7:
             d_id = 1
+        #
+        if d_id==1:
+            obj0 = self._dev_list[0][0];
+            self._vcdll.Dev_SetEnableSensorStream(obj0, 0)
         #
         obj = self._dev_list[d_id][0];
         self._vcdll.Dev_Stop(obj);
