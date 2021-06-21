@@ -17,7 +17,7 @@ from operator import itemgetter
 DEBUG = 1
 #
 NUM_DEVICE = 2
-NUM_SENSOR = 8
+NUM_SENSOR = 16
 NUM_LD = 16
 #
 # device : CX3 based USB Capture device
@@ -161,6 +161,10 @@ class VidepCapture():
         if DEBUG:
             print("num_device=%d" % (num_device))
         #
+        detected = ctypes.c_long(1)
+        self._vcdll.Dev_GetSensorDetected(obj, ctypes.byref(detected))
+        print(detected)
+        
         for i in range(num_device):
             buf = ctypes.create_string_buffer(10)
             obj = ctypes.c_void_p(self._vcdll.Dev_NewObject(i))
@@ -171,13 +175,16 @@ class VidepCapture():
             sn = (obj, line[:1], line[1:6], line[6:8])
             self._dev_list.append(sn)
             #
-            for j in range(NUM_SENSOR):
-                self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
-                detected = ctypes.c_long(1)
-                #d_p = ctypes.c_void_p(detected)
-                self._vcdll.Dev_GetSensorDetected(obj, ctypes.byref(detected))
-                print("%d - %d" % (i, j))
-                print(detected)
+        #
+
+        
+        
+
+#        for j in range(NUM_SENSOR):
+#            self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
+#
+#                print("%d - %d" % (i, j))
+#                print(detected)
                 #self._vcdll.Dev_SetGain(obj, ctypes.c_long(0))
                 #self._vcdll.Dev_SetExposure(obj, ctypes.c_long(4500))
                 #self._vcdll.Dev_SetSensorFlip(obj, ctypes.c_long(1), ctypes.c_long(1),)
