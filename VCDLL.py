@@ -488,7 +488,6 @@ def main():
     #
     dll_path = os.getcwd() + "/vcdll/libVCDLL.so"
     vc = VidepCapture(dll_path)
-    vc = VidepCapture()
     #
     vc.initialize()
     vc.select_laser(d_id, l_id)
