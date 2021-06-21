@@ -176,9 +176,9 @@ class VidepCapture():
         #
         d_id = 0
         obj = self._dev_list[d_id][0]
-        detected = ctypes.c_long(1)
+        #detected = ctypes.c_long(1)
+        #f = detected.value
         f = self.get_sensor_detected(d_id)
-        f = detected.value
         for i in range(NUM_SENSOR):
             if f & (1<<i):
                 self._sensor_list.append(1)
