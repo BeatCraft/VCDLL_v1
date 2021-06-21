@@ -220,8 +220,7 @@ class VidepCapture():
             return 1
         #
         detected = ctypes.c_long(0)
-        self._vcdll.Dev_GetSensorDetected(obj, ctypes.pointer(detected))
-        # ctypes.byref(detected)
+        self._vcdll.Dev_GetSensorDetected(obj, ctypes.byref(detected))
         return detected.value
 
     # d_id is an uint (we assume 0 7 in current generation devices),
