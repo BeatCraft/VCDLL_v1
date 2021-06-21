@@ -179,12 +179,12 @@ class VidepCapture():
         f = detected.value
         for i in range(NUM_SENSOR):
             if f & (1<<i):
-                print("1")
+                self._sensor_list.append(1)
             else:
-                print("0")
+                self._sensor_list.append(0)
             #
         #
-        #print(detected)
+        print(self._sensor_list)
 
 #        for j in range(NUM_SENSOR):
 #            self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
