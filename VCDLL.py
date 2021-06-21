@@ -385,7 +385,7 @@ class VidepCapture():
         #
         d_id = 0
         obj = self._dev_list[d_id][0]
-        if self._selected_sensor_id[s_id]:
+        if self._sensor_list[s_id]:
             self._vcdll.Dev_SetCurrentSensorNumber(obj, s_id)
             self._selected_sensor_id = s_id
             return 0
