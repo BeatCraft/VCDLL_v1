@@ -453,10 +453,10 @@ class VidepCapture():
         if self._vcdll is None:
             return 1
         #
-        obj0 = self._dev_list[0][0]
-        self._vcdll.Dev_Dealloc(obj0)
-        obj1 = self._dev_list[0][0]
-        self._vcdll.Dev_Dealloc(obj1)
+        #obj0 = self._dev_list[0][0]
+        #self._vcdll.Dev_Dealloc(obj0)
+        #obj1 = self._dev_list[0][0]
+        #self._vcdll.Dev_Dealloc(obj1)
         #
         self._vcdll.Dev_Terminate()
         del self._vcdll
