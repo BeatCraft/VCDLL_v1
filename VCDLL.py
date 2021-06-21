@@ -161,10 +161,7 @@ class VidepCapture():
         if DEBUG:
             print("num_device=%d" % (num_device))
         #
-        detected = ctypes.c_long(1)
-        self._vcdll.Dev_GetSensorDetected(obj, ctypes.byref(detected))
-        print(detected)
-        
+
         for i in range(num_device):
             buf = ctypes.create_string_buffer(10)
             obj = ctypes.c_void_p(self._vcdll.Dev_NewObject(i))
@@ -176,9 +173,10 @@ class VidepCapture():
             self._dev_list.append(sn)
             #
         #
-
-        
-        
+        obj = self._dev_list[0][0]
+        detected = ctypes.c_long(1)
+        self._vcdll.Dev_GetSensorDetected(obj, ctypes.byref(detected))
+        print(detected)
 
 #        for j in range(NUM_SENSOR):
 #            self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
