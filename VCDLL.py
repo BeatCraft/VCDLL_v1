@@ -385,10 +385,12 @@ class VidepCapture():
         #
         d_id = 0
         obj = self._dev_list[d_id][0]
-        # select a sensor to capture
-        self._vcdll.Dev_SetCurrentSensorNumber(obj, s_id)
-        self._selected_sensor_id = s_id
-        return 0
+        if self._selected_sensor_id[s_id]:
+            self._vcdll.Dev_SetCurrentSensorNumber(obj, s_id)
+            self._selected_sensor_id = s_id
+            return 0
+        #
+        return 1
 
     def set_laser_onoff(self, d_id, sw):
         if DEBUG:
@@ -464,9 +466,9 @@ def main():
     argvs = sys.argv
     argc = len(argvs)
     #
-    d_id = 0 # device id : 0
-    s_id = 0 # sensor id : 0 - 7
-    l_id = 0 # laser id : 0 - 3 (LDC suppots 4 channels but LS has only 3 LDs.)
+    d_id = 0 # device id : 0 or 1 but 1 is dummy device
+    s_id = 0 # sensor id : 0 - 15
+    l_id = 0 # laser id  : 0 - 15 (4 LS and a LS suppots 4 LDs but only 3 LDs implemented on the V1.)
     current = 30000
     duration = 10000
     #
@@ -478,15 +480,15 @@ def main():
     
     return 0
     
-    vc.select_sensor(d_id , s_id)
-    vc.start_device(0)
+    vc.select_laser(d_id, l_id)
+    vc.set_current_laser_setting(d_id, current, duration)
     #
-#    vc.set_current_laser_number(d_id, l_id) # select_laser()
-#    vc.set_current_laser_setting(d_id, current, duration)
-    #vc.select_sensor(d_id , s_id)
+    vc.select_sensor(d_id , s_id)
+    vc.start_device(d_id)
 #    vc.set_laser_onoff(d_id, 1)
     buf = vc.get_buffer(d_id, 10000)
 #    vc.set_laser_onoff(d_id, 0)
+    vc.stop_device(d_id)
     # save
     fname = "cap_" + str(d_id) + "_" + str(s_id) +"_" + str(l_id) + ".raw";
     print("### fname:",fname);
@@ -494,7 +496,6 @@ def main():
     with open(fname, 'wb') as f:
         f.write(image)
     #
-    vc.stop_device(0)
     vc.terminate()
     return 0
 #
