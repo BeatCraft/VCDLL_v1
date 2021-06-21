@@ -174,7 +174,7 @@ class VidepCapture():
             for j in range(NUM_SENSOR):
                 self._vcdll.Dev_SetCurrentSensorNumber(obj, j)
                 detected = ctypes.c_long(1)
-                self._vcdll.Dev_GetSensorDetected(obj, detected)
+                self._vcdll.Dev_GetSensorDetected(obj, ctypes.POINTER(detected))
                 print("%d - %d : %d" % (i, j, detected))
                 #self._vcdll.Dev_SetGain(obj, ctypes.c_long(0))
                 #self._vcdll.Dev_SetExposure(obj, ctypes.c_long(4500))
