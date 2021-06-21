@@ -176,9 +176,9 @@ class VidepCapture():
         obj = self._dev_list[0][0]
         detected = ctypes.c_long(1)
         self._vcdll.Dev_GetSensorDetected(obj, ctypes.byref(detected))
-        
+        f = detected.value
         for i in range(NUM_SENSOR):
-            if detected & (1<<i):
+            if f & (1<<i):
                 print("1")
             else:
                 print("0")
